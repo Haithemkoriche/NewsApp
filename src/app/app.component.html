@@ -1,0 +1,153 @@
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="container">
+  <div class="navbar-logo">
+    <h1>News App</h1>
+  </div>
+  <ul class="navbar-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#filters">filters</a></li>
+    <li><a href="#articles">articles</a></li>
+    <!-- <li><a href="#">Contact</a></li> -->
+  </ul>
+</div>
+</nav>
+
+
+<app-slider [articles]="articles"></app-slider>
+
+
+
+<div class="app-container">
+
+  <!-- Offline Mode Indicator -->
+  <div *ngIf="offlineMode" class="offline-indicator">
+    You are currently offline. Showing cached articles.
+  </div>
+
+  <section id="filters" class="filters-section">
+    <h3 class="section-title">Filter Articles</h3>
+    <div class="filters">
+      <div class="filter-item">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="filters.startDate" />
+      </div>
+
+      <div class="filter-item">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="filters.endDate" />
+      </div>
+
+      <div class="filter-item">
+        <label for="source">Source:</label>
+        <select id="source" [(ngModel)]="filters.source">
+          <option value="">All Sources</option>
+          <option *ngFor="let source of sources" [value]="source">
+            {{ source }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label for="searchQuery">Search:</label>
+        <input
+          type="text"
+          id="searchQuery"
+          [(ngModel)]="filters.q"
+          placeholder="Search articles"
+        />
+      </div>
+
+      <div class="filter-actions">
+        <button (click)="applyFilters()" class="btn-apply">Apply Filters</button>
+        <button (click)="resetFilters()" class="btn-reset">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section id="articles" class="articles-section">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading articles...</p>
+    </div>
+
+    <!-- No Articles Message -->
+    <div *ngIf="!isLoading && articles.length === 0" class="no-articles">
+      <p>No articles found. Try adjusting your filters.</p>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="articles-container" *ngIf="!isLoading && articles.length > 0">
+      <ng-container *ngFor="let article of articles">
+        <div *ngIf="isValidArticle(article)" class="article-card">
+          <img
+            *ngIf="article.urlToImage"
+            [src]="article.urlToImage"
+            alt="Article Image"
+            class="article-image"
+          />
+          <div class="article-content">
+            <h3 class="article-title">{{ article.title }}</h3>
+            <div class="article-meta">
+              <span class="article-source">{{ article.source.name }}</span>
+              <span class="article-date">
+                {{ article.publishedAt | date: "mediumDate" }}
+              </span>
+            </div>
+            <p class="article-description">{{ article.description }}</p>
+            <div class="article-actions">
+              <a [href]="article.url" target="_blank" class="article-link">
+                Read full article
+              </a>
+              <button
+                class="btn-save"
+                (click)="saveArticleForOffline(article)"
+              >
+                Save for Offline
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="!isLoading && articles.length > 0">
+    <button
+      (click)="goToPage(1)"
+      [disabled]="currentPage === 1"
+      class="btn-first"
+    >
+      First
+    </button>
+
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="btn-previous"
+    >
+      Previous
+    </button>
+
+    <span
+      *ngFor="let page of getPages()"
+      (click)="goToPage(page)"
+      class="page-number"
+      [class.active]="currentPage === page"
+    >
+      {{ page }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="isAllArticlesLoaded || articles.length === 0"
+      class="btn-next"
+    >
+      Next
+    </button>
+  </div>
+</div>
