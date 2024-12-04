@@ -24,8 +24,8 @@ Follow these steps to get the project running locally on your machine.
 
 ### Prerequisites
 
-- Node.js (v14.0.0 or higher)
-- Angular CLI (v12.0.0 or higher)
+- Node.js (v20.0.0 or higher)
+- Angular CLI (v18.0.0 or higher)
 - An API Key from [NewsAPI](https://newsapi.org/)
 
 ### Steps
