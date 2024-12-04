@@ -33,7 +33,7 @@ Follow these steps to get the project running locally on your machine.
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/news-app.git
+   git clone https://github.com/Haithemkoriche/NewsApp.git
    ```
 
 2. **Navigate into the project folder**
